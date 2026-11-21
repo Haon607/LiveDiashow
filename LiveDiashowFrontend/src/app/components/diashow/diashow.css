@@ -21,6 +21,45 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
+  opacity: 1;
+}
+
+.next-image {
+  opacity: 0;
+  transition: none;
+}
+
+.next-image.visible {
+  opacity: 1;
+  transition: opacity 2s ease-in-out;
+}
+
+.current-image.fading-out {
+  opacity: 0;
+  transition: opacity 2s ease-in-out;
+}
+
+.creation-time {
+  position: absolute;
+  z-index: 1;
+  left: max(1rem, env(safe-area-inset-left));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  padding: 0.65rem 0.9rem;
+  border: 1px solid rgb(255 255 255 / 18%);
+  border-radius: 0.6rem;
+  background: rgb(0 0 0 / 68%);
+  color: #fff;
+  font: 500 0.95rem/1.4 system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 1px 3px rgb(0 0 0 / 75%);
+  pointer-events: none;
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  transition: opacity 400ms ease-in-out;
+}
+
+.creation-time.visible {
+  opacity: 1;
 }
 
 .status {

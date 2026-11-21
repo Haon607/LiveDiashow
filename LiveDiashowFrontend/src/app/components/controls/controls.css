@@ -42,6 +42,25 @@
   cursor: pointer;
 }
 
+.input {
+  width: 104px;
+  min-height: 46px;
+  padding: 0 12px;
+  border: 1px solid #cbd6e3;
+  border-radius: 9px;
+  background: #fff;
+  color: #26364a;
+  font: inherit;
+  font-weight: 600;
+  text-align: center;
+}
+
+.input:focus-visible {
+  outline: 3px solid rgb(35 103 209 / 25%);
+  outline-offset: 2px;
+  border-color: #2367d1;
+}
+
 .button-primary {
   color: #fff;
   background: #2367d1;
@@ -76,6 +95,10 @@
   }
 
   .button {
+    width: 100%;
+  }
+
+  .input {
     width: 100%;
   }
 }

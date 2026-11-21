@@ -1,7 +1,7 @@
 <main class="controls-page">
   <section class="controls-card" aria-label="Diashow controls">
     <div class="actions">
-      <input id="timing" class="input" type="number" #timing value="5">
+      <input id="timing" class="input" type="number" #timing value="5" placeholder="Sekunden zwischen Bildern">
       <button type="button" class="button button-primary" (click)="beginDiashow(timing.value)">Diashow</button>
       <button type="button" class="button button-secondary" (click)="exportDiashow()">Export</button>
     </div>
