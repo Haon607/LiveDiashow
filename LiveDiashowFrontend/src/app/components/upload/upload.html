@@ -40,6 +40,9 @@
 
     @if (message()) {
       <p class="status-message" role="status">{{ message() }}</p>
+      @if (uploadedImage(); as image) {
+        <a class="download-link" [href]="image.data" [download]="'bild-' + image.id">Bild herunterladen</a>
+      }
     }
   </section>
 </main>

@@ -1,6 +1,6 @@
 <main class="slideshow" aria-label="Diashow">
   @if (image(); as currentImage) {
-    <img class="slideshow-image current-image" [class.fading-out]="transitioning()" [src]="currentImage.data" alt="" />
+    <img class="slideshow-image current-image" [class.fading-in]="firstImageFadingIn()" [class.fading-out]="transitioning()" [src]="currentImage.data" alt="" />
     <time class="creation-time" [class.visible]="showCreationTime()" [attr.datetime]="currentImage.creationDate | date:'yyyy-MM-ddTHH:mm:ss'">
       {{ currentImage.creationDate | date:'HH:mm' }}
     </time>
@@ -9,6 +9,8 @@
     }
   } @else if (loading()) {
     <p class="status" role="status">Diashow wird geladen…</p>
+  } @else if (ready()) {
+    <p class="status" role="status">Diashow bereit</p>
   } @else if (error()) {
     <p class="status" role="alert">Das nächste Bild konnte nicht geladen werden.</p>
   }

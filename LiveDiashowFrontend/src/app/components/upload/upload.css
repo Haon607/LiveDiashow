@@ -113,6 +113,13 @@ h1 {
   font-size: 1.4rem;
 }
 
+.download-link {
+  display: inline-block;
+  margin-top: 12px;
+  color: #2367d1;
+  font-weight: 600;
+}
+
 @media (max-width: 480px) {
   .upload-card {
     padding: 24px 18px;

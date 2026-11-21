@@ -9,6 +9,7 @@ import { HttpService } from '../../services/http-service';
 })
 export class Upload {
   readonly previewUrl = signal<string | null>(null);
+  readonly uploadedImage = signal<{ id: string; data: string } | null>(null);
   readonly isUploading = signal(false);
   readonly message = signal('');
 
@@ -43,13 +44,16 @@ export class Upload {
 
     this.isUploading.set(true);
     this.message.set('');
+    this.uploadedImage.set(null);
     this.http.postImage(image).subscribe({
-      next: () => {
+      next: (uploadedImage) => {
         this.previewUrl.set(null);
+        this.uploadedImage.set(uploadedImage);
         this.message.set('Bild hochgeladen!');
         this.isUploading.set(false);
       },
       error: () => {
+        this.uploadedImage.set(null);
         this.message.set('Bild konnte nicht hochgeladen werden.');
         this.isUploading.set(false);
       },

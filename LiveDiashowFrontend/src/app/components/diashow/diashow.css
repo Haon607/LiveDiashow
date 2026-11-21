@@ -29,6 +29,15 @@
   transition: none;
 }
 
+.current-image.fading-in {
+  animation: fade-in 2s ease-in-out both;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 .next-image.visible {
   opacity: 1;
   transition: opacity 2s ease-in-out;
