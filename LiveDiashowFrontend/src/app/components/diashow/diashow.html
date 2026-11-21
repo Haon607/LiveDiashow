@@ -1,0 +1,9 @@
+<main class="slideshow" aria-label="Diashow">
+  @if (image(); as currentImage) {
+    <img class="slideshow-image" [src]="currentImage.data" alt="" />
+  } @else if (loading()) {
+    <p class="status" role="status">Diashow wird geladen…</p>
+  } @else if (error()) {
+    <p class="status" role="alert">Das nächste Bild konnte nicht geladen werden.</p>
+  }
+</main>
