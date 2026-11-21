@@ -1,1 +1,45 @@
-<p>upload works!</p>
+<main class="upload-page">
+  <section class="upload-card" aria-labelledby="upload-title">
+    <h1 id="upload-title">Bild hinzufügen</h1>
+
+    <input
+      #cameraInput
+      class="visually-hidden"
+      type="file"
+      accept="image/*"
+      capture="environment"
+      aria-label="Take a picture with the camera"
+      (change)="onImageSelected($event)"
+    />
+    <input
+      #fileInput
+      class="visually-hidden"
+      type="file"
+      accept="image/*"
+      aria-label="Select a picture from your device"
+      (change)="onImageSelected($event)"
+    />
+
+    @if (!previewUrl()) {
+      <div class="actions">
+        <button type="button" class="button button-primary" (click)="cameraInput.click()">Ein Bild mit der Kamera machen</button>
+        <button type="button" class="button button-secondary" (click)="fileInput.click()">Ein bereits gemachtes Bild wählen</button>
+      </div>
+    } @else {
+      <div class="preview-panel">
+        <p class="preview-label">Vorschau</p>
+        <img class="preview-image" [src]="previewUrl()" alt="Selected picture preview" />
+        <div class="actions">
+          <button type="button" class="button button-primary" [disabled]="isUploading()" (click)="confirmImage()">
+            {{ isUploading() ? 'Wird hochgeladen…' : 'Hochladen!' }}
+          </button>
+          <button type="button" class="button button-secondary" [disabled]="isUploading()" (click)="removeImage()">Verwerfen</button>
+        </div>
+      </div>
+    }
+
+    @if (message()) {
+      <p class="status-message" role="status">{{ message() }}</p>
+    }
+  </section>
+</main>
