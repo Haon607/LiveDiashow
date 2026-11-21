@@ -5,10 +5,12 @@ import { Image } from '../models/Image';
 
 @Injectable({ providedIn: 'root' })
 export class HttpService {
-  constructor(private http: HttpClient) {}
+  private readonly baseUrl: string = 'https://livediashow.bamorgusuh.online/';
+
+  constructor(private readonly http: HttpClient) {}
 
   public postImage(data: string): Observable<Image> {
-    return this.http.post<Image>('http://192.168.0.6:12000/api/image', { data });
+    return this.http.post<Image>(this.baseUrl + 'api/image', { data });
   }
 }
 
