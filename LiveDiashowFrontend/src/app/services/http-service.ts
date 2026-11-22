@@ -5,9 +5,10 @@ import { Image } from '../models/Image';
 
 @Injectable({providedIn: 'root'})
 export class HttpService {
-  private readonly baseUrl: string = 'https://livediashow.bamorgusuh.online/';
+  private readonly baseUrl: string = '';
 
   constructor(private readonly http: HttpClient) {
+    // this.baseUrl = 'https://livedia.bamorgusuh.online/';
   }
 
   public postImage(data: string): Observable<Image> {
