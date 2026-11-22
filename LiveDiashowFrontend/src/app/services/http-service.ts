@@ -22,5 +22,21 @@ export class HttpService {
   public export(): Observable<Blob> {
     return this.http.get(this.baseUrl + 'api/image/export', {responseType: 'blob'});
   }
+
+  public adminImages(): Observable<Image[]> {
+    return this.http.get<Image[]>(this.baseUrl + 'api/image/admin');
+  }
+
+  public newAdminImages(afterId: string): Observable<Image[]> {
+    return this.http.get<Image[]>(this.baseUrl + 'api/image/admin/new', {params: {afterId}});
+  }
+
+  public excludeImage(id: string): Observable<void> {
+    return this.http.put<void>(this.baseUrl + 'api/image/' + id + '/exclude', {});
+  }
+
+  public includeImage(id: string): Observable<void> {
+    return this.http.put<void>(this.baseUrl + 'api/image/' + id + '/include', {});
+  }
 }
 

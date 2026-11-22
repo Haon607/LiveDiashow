@@ -1,0 +1,32 @@
+<main class="admin-page">
+  <header class="page-heading">
+    <div>
+      <h1>Bilder</h1>
+    </div>
+    <input id="image-upload" class="upload-input" type="file" accept="image/*" multiple (change)="uploadFiles($event)">
+    <label class="upload-control" for="image-upload">Bilder hochladen</label>
+  </header>
+
+  @if (message()) { <p class="status-message" role="alert">{{ message() }}</p> }
+  @if (images().length === 0 && !message()) { <p class="empty-state">Noch keine Bilder vorhanden.</p> }
+
+  <section class="image-grid" aria-label="Alle Bilder">
+    @for (image of images(); track image.id) {
+      <article class="image-card" [class.is-excluded]="image.excluded">
+        <img [src]="image.data" alt="Hochgeladenes Bild" loading="lazy">
+        <div class="image-details">
+          <time>{{ image.creationDate | date:'short' }}</time>
+          @if (image.excluded) {
+            <button class="include-button" type="button" (click)="include(image)" [disabled]="busyIds().includes(image.id)">
+              {{ busyIds().includes(image.id) ? 'Wird gespeichert…' : 'Wieder aufnehmen' }}
+            </button>
+          } @else {
+            <button class="exclude-button" type="button" (click)="exclude(image)" [disabled]="busyIds().includes(image.id)">
+              {{ busyIds().includes(image.id) ? 'Wird gespeichert…' : 'Ausschließen' }}
+            </button>
+          }
+        </div>
+      </article>
+    }
+  </section>
+</main>

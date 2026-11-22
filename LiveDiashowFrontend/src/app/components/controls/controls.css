@@ -85,6 +85,14 @@
   font-weight: 600;
 }
 
+.admin-link {
+  display: inline-block;
+  margin-top: 20px;
+  color: #2367d1;
+  font-weight: 600;
+  text-decoration: none;
+}
+
 @media (max-width: 480px) {
   .controls-card {
     padding: 24px 18px;

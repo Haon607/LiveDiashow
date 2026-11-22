@@ -27,12 +27,14 @@ public class Image {
     private LocalDateTime creationDate;
     private Boolean alreadyShown;
     private Boolean shownInCycle;
+    private Boolean excluded;
 
     public Image(String data) {
         this.data = data;
         this.creationDate = LocalDateTime.now(ZoneId.of("Europe/Vienna"));
         this.alreadyShown = false;
         this.shownInCycle = false;
+        this.excluded = false;
     }
 
     @PostLoad
@@ -49,5 +51,13 @@ public class Image {
 
     public void resetCycle() {
         this.shownInCycle = false;
+    }
+
+    public void exclude() {
+        this.excluded = true;
+    }
+
+    public void include() {
+        this.excluded = false;
     }
 }
