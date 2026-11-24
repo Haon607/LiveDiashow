@@ -13,7 +13,9 @@
   <section class="image-grid" aria-label="Alle Bilder">
     @for (image of images(); track image.id) {
       <article class="image-card" [class.is-excluded]="image.excluded">
-        <img [src]="image.data" alt="Hochgeladenes Bild" loading="lazy">
+        <a [href]="image.data" target="_blank" rel="noopener noreferrer" (click)="openImage($event, image.data)">
+          <img [src]="image.data" alt="Hochgeladenes Bild" loading="lazy">
+        </a>
         <div class="image-details">
           <time>{{ image.creationDate | date:'short' }}</time>
           @if (image.excluded) {

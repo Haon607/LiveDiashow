@@ -72,6 +72,16 @@ export class Admin implements OnInit, OnDestroy {
     this.setExcluded(image, false);
   }
 
+  openImage(event: MouseEvent, data: string): void {
+    event.preventDefault();
+    const [metadata, encoded] = data.split(',', 2);
+    const mimeType = metadata.match(/^data:([^;]+)/)?.[1] ?? 'application/octet-stream';
+    const bytes = Uint8Array.from(atob(encoded), character => character.charCodeAt(0));
+    const url = URL.createObjectURL(new Blob([bytes], { type: mimeType }));
+    window.open(url, '_blank', 'noopener,noreferrer');
+    window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
+  }
+
   private setExcluded(image: Image, excluded: boolean): void {
     this.busyIds.update(ids => [...ids, image.id]);
     const request = excluded ? this.http.excludeImage(image.id) : this.http.includeImage(image.id);
