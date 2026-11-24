@@ -4,3 +4,5 @@ export interface Image {
   creationDate: Date;
   excluded: boolean;
 }
+
+export type ImageSummary = Pick<Image, 'id' | 'creationDate' | 'excluded'>;

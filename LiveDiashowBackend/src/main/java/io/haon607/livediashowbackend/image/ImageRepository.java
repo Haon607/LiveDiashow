@@ -17,7 +17,14 @@ public interface ImageRepository extends ListCrudRepository<Image, UUID> {
     List<Image> findAllByOrderByCreationDateDesc();
     List<Image> findAllByExcludedFalse();
     List<Image> findAllByOrderByCreationDateAsc();
-    List<Image> findAllByOrderByCreationDateDescIdDesc();
-    @Query("select image from Image image where image.creationDate > (select cursor.creationDate from Image cursor where cursor.id = :cursorId) or (image.creationDate = (select cursor.creationDate from Image cursor where cursor.id = :cursorId) and image.id > :cursorId) order by image.creationDate asc, image.id asc")
-    List<Image> findCreatedAfterCursor(@Param("cursorId") UUID cursorId);
+    @Query("select image.id as id, image.creationDate as creationDate, image.excluded as excluded from Image image order by image.creationDate desc, image.id desc")
+    List<ImageAdminSummary> findAllAdminSummaries();
+    @Query("select image.id as id, image.creationDate as creationDate, image.excluded as excluded from Image image where image.creationDate > (select cursor.creationDate from Image cursor where cursor.id = :cursorId) or (image.creationDate = (select cursor.creationDate from Image cursor where cursor.id = :cursorId) and image.id > :cursorId) order by image.creationDate asc, image.id asc")
+    List<ImageAdminSummary> findAdminSummariesCreatedAfterCursor(@Param("cursorId") UUID cursorId);
+
+    interface ImageAdminSummary {
+        UUID getId();
+        java.time.LocalDateTime getCreationDate();
+        Boolean getExcluded();
+    }
 }

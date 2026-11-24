@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { HttpService } from '../../services/http-service';
-import { Image } from '../../models/Image';
+import { Image, ImageSummary } from '../../models/Image';
 
 @Component({
   imports: [DatePipe],
@@ -17,6 +17,9 @@ export class Admin implements OnInit, OnDestroy {
   private requestInFlight = false;
   private destroyed = false;
   private cursorId: string | null = null;
+  private imageRequestQueue: ImageSummary[] = [];
+  private readonly loadingImageIds = new Set<string>();
+  private readonly maxConcurrentImageRequests = 4;
 
   constructor(private readonly http: HttpService) {}
 
@@ -39,11 +42,15 @@ export class Admin implements OnInit, OnDestroy {
     request.subscribe({
       next: images => {
         if (this.cursorId === null) {
-          this.images.set([...images].sort((a, b) => new Date(b.creationDate).getTime() - new Date(a.creationDate).getTime()));
+          const sortedImages = [...images].sort((a, b) => new Date(b.creationDate).getTime() - new Date(a.creationDate).getTime());
+          this.images.set(sortedImages.map(image => ({ ...image, data: '' })));
+          this.queueImageRequests(sortedImages);
         } else if (images.length) {
           const knownIds = new Set(this.images().map(image => image.id));
-          this.images.update(current => [...current, ...images.filter(image => !knownIds.has(image.id))]
+          const newImages = images.filter(image => !knownIds.has(image.id));
+          this.images.update(current => [...current, ...newImages.map(image => ({ ...image, data: '' }))]
             .sort((a, b) => new Date(b.creationDate).getTime() - new Date(a.creationDate).getTime()));
+          this.queueImageRequests(newImages);
         }
         if (this.cursorId === null && images.length) this.cursorId = images[0].id;
         else if (images.length) {
@@ -57,6 +64,35 @@ export class Admin implements OnInit, OnDestroy {
       },
       complete: () => this.finishRefresh(),
     });
+  }
+
+  private queueImageRequests(images: ImageSummary[]): void {
+    const alreadyQueued = new Set(this.imageRequestQueue.map(image => image.id));
+    this.imageRequestQueue.push(...images
+      .filter(image => !this.loadingImageIds.has(image.id) && !alreadyQueued.has(image.id))
+      .sort((a, b) => new Date(b.creationDate).getTime() - new Date(a.creationDate).getTime()));
+    this.loadNextImages();
+  }
+
+  private loadNextImages(): void {
+    while (!this.destroyed
+      && this.loadingImageIds.size < this.maxConcurrentImageRequests
+      && this.imageRequestQueue.length) {
+      const image = this.imageRequestQueue.shift()!;
+      this.loadingImageIds.add(image.id);
+      this.http.adminImageData(image.id).subscribe({
+        next: data => this.images.update(images => images.map(item => item.id === image.id ? { ...item, data } : item)),
+        error: () => {
+          this.loadingImageIds.delete(image.id);
+          this.message.set('Ein Bild konnte nicht geladen werden.');
+          this.loadNextImages();
+        },
+        complete: () => {
+          this.loadingImageIds.delete(image.id);
+          this.loadNextImages();
+        },
+      });
+    }
   }
 
   private finishRefresh(): void {

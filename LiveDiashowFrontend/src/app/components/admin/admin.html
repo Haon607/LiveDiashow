@@ -8,10 +8,11 @@
   </header>
 
   @if (message()) { <p class="status-message" role="alert">{{ message() }}</p> }
-  @if (images().length === 0 && !message()) { <p class="empty-state">Noch keine Bilder vorhanden.</p> }
+  @if (images().length === 0 && !message()) { <p class="empty-state">Bilder werden geladen...</p> }
 
   <section class="image-grid" aria-label="Alle Bilder">
     @for (image of images(); track image.id) {
+      @if (image.data) {
       <article class="image-card" [class.is-excluded]="image.excluded">
         <a [href]="image.data" target="_blank" rel="noopener noreferrer" (click)="openImage($event, image.data)">
           <img [src]="image.data" alt="Hochgeladenes Bild" loading="lazy">
@@ -29,6 +30,7 @@
           }
         </div>
       </article>
+      }
     }
   </section>
 </main>

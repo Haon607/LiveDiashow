@@ -94,13 +94,24 @@ public class ImageController {
     }
 
     @GetMapping("/admin")
-    public List<Image> getImagesForAdmin() {
-        return imageRepository.findAllByOrderByCreationDateDescIdDesc();
+    public List<AdminImageSummary> getImagesForAdmin() {
+        return imageRepository.findAllAdminSummaries().stream()
+            .map(image -> new AdminImageSummary(image.getId(), image.getCreationDate(), image.getExcluded()))
+            .toList();
     }
 
     @GetMapping("/admin/new")
-    public List<Image> getNewAdminImages(@RequestParam java.util.UUID afterId) {
-        return imageRepository.findCreatedAfterCursor(afterId);
+    public List<AdminImageSummary> getNewAdminImages(@RequestParam java.util.UUID afterId) {
+        return imageRepository.findAdminSummariesCreatedAfterCursor(afterId).stream()
+            .map(image -> new AdminImageSummary(image.getId(), image.getCreationDate(), image.getExcluded()))
+            .toList();
+    }
+
+    @GetMapping("/admin/{id}/data")
+    public ResponseEntity<ImageDataResponse> getAdminImageData(@PathVariable java.util.UUID id) {
+        return imageRepository.findById(id)
+            .map(image -> ResponseEntity.ok(new ImageDataResponse(image.getData())))
+            .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}/exclude")
@@ -157,5 +168,11 @@ public class ImageController {
     }
 
     public record ImageUploadRequest(String data) {
+    }
+
+    public record AdminImageSummary(java.util.UUID id, java.time.LocalDateTime creationDate, Boolean excluded) {
+    }
+
+    public record ImageDataResponse(String data) {
     }
 }

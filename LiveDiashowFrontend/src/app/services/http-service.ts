@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Image } from '../models/Image';
+import { Observable, map } from 'rxjs';
+import { Image, ImageSummary } from '../models/Image';
 
 @Injectable({providedIn: 'root'})
 export class HttpService {
@@ -23,12 +23,17 @@ export class HttpService {
     return this.http.get(this.baseUrl + 'api/image/export', {responseType: 'blob'});
   }
 
-  public adminImages(): Observable<Image[]> {
-    return this.http.get<Image[]>(this.baseUrl + 'api/image/admin');
+  public adminImages(): Observable<ImageSummary[]> {
+    return this.http.get<ImageSummary[]>(this.baseUrl + 'api/image/admin');
   }
 
-  public newAdminImages(afterId: string): Observable<Image[]> {
-    return this.http.get<Image[]>(this.baseUrl + 'api/image/admin/new', {params: {afterId}});
+  public newAdminImages(afterId: string): Observable<ImageSummary[]> {
+    return this.http.get<ImageSummary[]>(this.baseUrl + 'api/image/admin/new', {params: {afterId}});
+  }
+
+  public adminImageData(id: string): Observable<string> {
+    return this.http.get<{data: string}>(this.baseUrl + 'api/image/admin/' + id + '/data')
+      .pipe(map(response => response.data));
   }
 
   public excludeImage(id: string): Observable<void> {
